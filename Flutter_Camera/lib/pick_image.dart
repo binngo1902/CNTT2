@@ -1,0 +1,131 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_picker/image_picker.dart';
+
+class PickImage extends StatefulWidget {
+  const PickImage({super.key});
+
+  @override
+  State<PickImage> createState() => _PickImageState();
+}
+
+class _PickImageState extends State<PickImage> {
+  final picker = ImagePicker();
+  String result = "";
+  XFile? image;
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      backgroundColor: Colors.grey[200],
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.menu_close,
+        backgroundColor: Colors.black,
+        // onPressed: () async {
+        //   image = await picker.pickImage(source: ImageSource.gallery);
+        //   setState(() {});
+        // },
+        overlayOpacity: 0.5,
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.image_search_rounded),
+              label: "Gallery",
+              backgroundColor: Colors.blue[300],
+              onTap: () async {
+                image = await picker.pickImage(source: ImageSource.gallery);
+                setState(() {});
+              }),
+          SpeedDialChild(
+              child: Icon(Icons.camera_alt_outlined),
+              label: "Camera",
+              backgroundColor: Colors.blue[300],
+              onTap: () async {
+                image = await picker.pickImage(source: ImageSource.camera);
+                setState(() {});
+              }),
+        ],
+      ),
+      appBar: AppBar(
+        backgroundColor: Colors.pink,
+        title: Text('Detected Skin Cancer'),
+      ),
+      body: Center(
+        child: Column(children: [
+          SizedBox(
+            height: height / 60,
+          ),
+          Text(
+            "Shown Image",
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: height / 60,
+          ),
+          Container(
+            height: height / 8 * 3,
+            width: width / 8 * 7,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2,
+                ),
+                image: DecorationImage(
+                  image: image == null
+                      ? AssetImage("assets/background.jpg")
+                      : FileImage(File(image?.path as String)) as ImageProvider,
+                  fit: BoxFit.cover,
+                )),
+          ),
+          SizedBox(
+            height: height / 60,
+          ),
+          image != null
+              ? ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.cyan[400],
+                  ),
+                  child: Text(
+                    'Result Predict',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ))
+              : SizedBox(),
+          SizedBox(
+            height: height / 60 * 10,
+            child: Text(
+              result,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.cyan[300],
+              ),
+            ),
+          ),
+          image != null
+              ? ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      image = null;
+                      result = "";
+                    });
+                  },
+                  child: Text('Clear Image and Result'))
+              : SizedBox(),
+        ]),
+      ),
+    );
+  }
+}
