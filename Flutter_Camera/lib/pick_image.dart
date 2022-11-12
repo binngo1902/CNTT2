@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PickImage extends StatefulWidget {
@@ -16,7 +17,16 @@ class PickImage extends StatefulWidget {
 class _PickImageState extends State<PickImage> {
   final picker = ImagePicker();
   String result = "";
-  XFile? image;
+  var _image;
+
+  _cropImage(XFile imageFile) async {
+    CroppedFile? crop =
+        await ImageCropper().cropImage(sourcePath: imageFile.path);
+    setState(() {
+      _image = XFile(crop!.path);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -37,7 +47,8 @@ class _PickImageState extends State<PickImage> {
               label: "Gallery",
               backgroundColor: Colors.blue[300],
               onTap: () async {
-                image = await picker.pickImage(source: ImageSource.gallery);
+                _image = await picker.pickImage(source: ImageSource.gallery);
+                _cropImage(_image);
                 setState(() {});
               }),
           SpeedDialChild(
@@ -45,7 +56,8 @@ class _PickImageState extends State<PickImage> {
               label: "Camera",
               backgroundColor: Colors.blue[300],
               onTap: () async {
-                image = await picker.pickImage(source: ImageSource.camera);
+                _image = await picker.pickImage(source: ImageSource.camera);
+                _cropImage(_image);
                 setState(() {});
               }),
         ],
@@ -79,16 +91,17 @@ class _PickImageState extends State<PickImage> {
                   width: 2,
                 ),
                 image: DecorationImage(
-                  image: image == null
+                  image: _image == null
                       ? AssetImage("assets/background.jpg")
-                      : FileImage(File(image?.path as String)) as ImageProvider,
+                      : FileImage(File(_image?.path as String))
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 )),
           ),
           SizedBox(
             height: height / 60,
           ),
-          image != null
+          _image != null
               ? ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -114,11 +127,11 @@ class _PickImageState extends State<PickImage> {
               ),
             ),
           ),
-          image != null
+          _image != null
               ? ElevatedButton(
                   onPressed: () {
                     setState(() {
-                      image = null;
+                      _image = null;
                       result = "";
                     });
                   },
