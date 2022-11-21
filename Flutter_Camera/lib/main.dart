@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/home.dart';
+import 'package:flutter_camera/login.dart';
+import 'package:flutter_camera/register.dart';
 import 'pick_image.dart';
 
 void main() {
@@ -11,21 +14,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Home(),
+      home: Login(),
+      routes: {
+        "/home": (context) => new Home(),
+        "/login": (context) => new Login(),
+        "/register": (context) => new Register(),
+      },
     );
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  @override
-  Widget build(BuildContext context) {
-    return PickImage();
   }
 }

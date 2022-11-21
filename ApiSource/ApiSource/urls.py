@@ -15,7 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from MyApi.views import RegisterAPI, LoginAPI, UserAPI, UploadImageAPI
+from knox import views as knox_views
+from django.conf import settings
+from django.conf.urls.static import static
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/register/', RegisterAPI.as_view(), name='register'),
+    path('api/login/', LoginAPI.as_view(), name='login'),
+    path('api/logout/', knox_views.LogoutView.as_view(), name='logout'),
+    path('user', UserAPI.as_view(), name='user'),
+    path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
+    path('api/uploadimage/', UploadImageAPI.as_view(), name='uploadimage'),
 ]
+
