@@ -30,5 +30,7 @@ urlpatterns = [
     path('user', UserAPI.as_view(), name='user'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/uploadimage/', UploadImageAPI.as_view(), name='uploadimage'),
-]
+    path('api/getResult/', UploadImageAPI.as_view(), name='getResult'),
+
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

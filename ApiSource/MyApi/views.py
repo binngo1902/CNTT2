@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 from knox.models import AuthToken
-from .serializers import UserSerializer, RegisterSerializer, UploadImageSerializer
+from .serializers import UserSerializer, RegisterSerializer, UploadImageSerializer , GetPredictSerializer
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser ,FormParser
 from rest_framework import status
@@ -55,3 +55,12 @@ class UploadImageAPI(APIView):
             return Response(serializer.data,status= status.HTTP_200_OK)
         else:
             return Response(serializer.errors,status= status.HTTP_400_BAD_REQUEST)
+
+class GetPredict(generics.ListCreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+    model = User
+    serializer_class = GetPredictSerializer
+
+    def get_queryset(self,request):
+        print(request)
+        return User.objects.filter(username="binngo1903").all()

@@ -23,4 +23,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 class UploadImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadImage
-        fields = ('id', 'image')
+        fields = ('id', 'username' ,'image')
+
+
+class GetPredictSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadImage
+        fields = ('username')

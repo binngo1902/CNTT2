@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/information.dart';
+import 'package:flutter_camera/result.dart';
 import 'package:flutter_camera/pick_image.dart';
 
 class Home extends StatefulWidget {
@@ -16,6 +16,10 @@ class _HomeState extends State<Home> {
     Information(),
   ];
   int currentIndex = 0;
+  void initState() {
+    print("123");
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       body: tabs[currentIndex],
@@ -30,7 +34,7 @@ class _HomeState extends State<Home> {
               icon: Icon(Icons.photo_size_select_actual_rounded),
               label: "Main"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.people_alt_outlined), label: "Information"),
+              icon: Icon(Icons.people_alt_outlined), label: "Result"),
         ],
         onTap: (index) {
           setState(() {

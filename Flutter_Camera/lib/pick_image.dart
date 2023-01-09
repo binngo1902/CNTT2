@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/api.dart';
+import 'package:flutter_camera/dialog/dialog_loading.dart';
+import 'package:flutter_camera/dialog/dialog_message.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -107,7 +109,25 @@ class _PickImageState extends State<PickImage> {
                   onPressed: () async {
                     ApiService api = new ApiService();
                     File file = File(_image!.path);
-                    api.Upload(file);
+                    LoadingDialog.showLoadingDialog(context, "Loading...");
+                    var res = await api.Upload(file);
+                    LoadingDialog.hideLoadingDialog(context);
+                    if (res.statusCode == 200) {
+                      MessageDialog.showMessageDialog(
+                        context,
+                        "Upload Successfully",
+                        "Wait some seconds and move to Result view. You can continue choose another image to predict",
+                      );
+                      setState(() {
+                        _image = null;
+                      });
+                    } else {
+                      MessageDialog.showMessageDialog(
+                        context,
+                        "Error",
+                        "System Error. Please try again",
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.cyan[400],
@@ -120,27 +140,6 @@ class _PickImageState extends State<PickImage> {
                       color: Colors.black,
                     ),
                   ))
-              : SizedBox(),
-          SizedBox(
-            height: height / 60 * 10,
-            child: Text(
-              result,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.cyan[300],
-              ),
-            ),
-          ),
-          _image != null
-              ? ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      _image = null;
-                      result = "";
-                    });
-                  },
-                  child: Text('Clear Image and Result'))
               : SizedBox(),
         ]),
       ),

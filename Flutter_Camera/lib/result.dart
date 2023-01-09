@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_camera/api.dart';
 import 'package:flutter_camera/dialog/dialog_loading.dart';
 import 'package:flutter_camera/dialog/dialog_message.dart';
+import 'package:flutter_camera/fullScreenImage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -77,17 +78,42 @@ class _InformationState extends State<Information> {
                       color: Colors.black,
                     ),
                   )),
-              SizedBox(
-                height: height / 60 * 10,
-                child: Text(
-                  result,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.cyan[300],
-                  ),
-                ),
-              ),
+              DataTable(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                    width: 1,
+                    color: Colors.black,
+                  )),
+                  columns: [
+                    DataColumn(label: Text("Image")),
+                    DataColumn(label: VerticalDivider()),
+                    DataColumn(label: Text("Predict")),
+                  ],
+                  rows: [
+                    DataRow(
+                      cells: [
+                        DataCell(
+                          Expanded(
+                              child: GestureDetector(
+                                  child: Image.network(
+                                      'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg',
+                                      fit: BoxFit.fill),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              FullScreenImageViewer(
+                                                  'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg')),
+                                    );
+                                  }),
+                              flex: 1),
+                        ),
+                        DataCell(VerticalDivider()),
+                        DataCell(Text("456")),
+                      ],
+                    )
+                  ])
             ]),
           ),
         ],
