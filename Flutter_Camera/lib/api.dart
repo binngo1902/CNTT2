@@ -15,6 +15,7 @@ class ApiService {
   var logoutUri;
   var loginUri;
   var uploadUri;
+  var getResultUri;
 
   ApiService() {
     if (Platform.isAndroid) {
@@ -22,10 +23,12 @@ class ApiService {
     } else {
       path = "http://127.0.0.1:8000";
     }
+
     registerUri = Uri.parse('$path/api/register/');
     logoutUri = Uri.parse("$path/api/logout/");
     loginUri = Uri.parse("$path/api/login/");
     uploadUri = Uri.parse("$path/api/uploadimage/");
+    getResultUri = Uri.parse("$path/api/getResult");
   }
 
   Future<dynamic> register(
@@ -49,6 +52,19 @@ class ApiService {
   Future<dynamic> login(String username, String password) async {
     var response = await http
         .post(loginUri, body: {"username": username, "password": password});
+    return response;
+  }
+
+  Future<dynamic> getResult() async {
+    var token = await storage.read(key: 'token');
+    var username = await storage.read(key: 'username');
+    var Query =
+        Uri.parse(getResultUri.toString() + '?username=' + (username ?? ""));
+    var response = await http.get(Query, headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Token $token',
+    });
     return response;
   }
 

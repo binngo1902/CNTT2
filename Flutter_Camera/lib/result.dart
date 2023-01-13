@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_camera/api.dart';
@@ -25,10 +26,17 @@ class _InformationState extends State<Information> {
 
   String result = "";
   var _image;
+  var data;
   String? username = "";
   @override
   void initState() {
     getName();
+    ApiService api = new ApiService();
+    api.getResult().then((value) {
+      var message = jsonDecode(value.body);
+      data = message["data"];
+      print(data);
+    });
     super.initState();
   }
 
@@ -78,42 +86,54 @@ class _InformationState extends State<Information> {
                       color: Colors.black,
                     ),
                   )),
-              DataTable(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                    width: 1,
-                    color: Colors.black,
-                  )),
-                  columns: [
-                    DataColumn(label: Text("Image")),
-                    DataColumn(label: VerticalDivider()),
-                    DataColumn(label: Text("Predict")),
-                  ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(
-                          Expanded(
-                              child: GestureDetector(
-                                  child: Image.network(
-                                      'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg',
-                                      fit: BoxFit.fill),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              FullScreenImageViewer(
-                                                  'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg')),
-                                    );
-                                  }),
-                              flex: 1),
+              Container(
+                padding: EdgeInsets.all(4.0),
+                child: Table(border: TableBorder.all(), children: [
+                  TableRow(children: [
+                    Center(
+                        child: Text("Image",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black))),
+                    Center(
+                        child: Text("Predict",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black))),
+                  ]),
+                  TableRow(
+                    children: [
+                      TableCell(
+                        child: GestureDetector(
+                            child: Image.network(
+                              'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg',
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FullScreenImageViewer(
+                                        'http://127.0.0.1:8000/media/images/image_cropper_AD44A60D-D7F9-443A-81C7-8541878E6790-77085-0000055EEF4B0E52.jpg')),
+                              );
+                            }),
+                      ),
+                      TableCell(
+                        verticalAlignment: TableCellVerticalAlignment.fill,
+                        child: Center(
+                          child: Text("456",
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              )),
                         ),
-                        DataCell(VerticalDivider()),
-                        DataCell(Text("456")),
-                      ],
-                    )
-                  ])
+                      ),
+                    ],
+                  )
+                ]),
+              )
             ]),
           ),
         ],

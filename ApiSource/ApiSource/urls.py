@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from MyApi.views import RegisterAPI, LoginAPI, UserAPI, UploadImageAPI
+from MyApi.views import RegisterAPI, LoginAPI, UserAPI, UploadImageAPI , GetPredictAPI
 from knox import views as knox_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -30,7 +30,7 @@ urlpatterns = [
     path('user', UserAPI.as_view(), name='user'),
     path('api/logoutall/', knox_views.LogoutAllView.as_view(), name='logoutall'),
     path('api/uploadimage/', UploadImageAPI.as_view(), name='uploadimage'),
-    path('api/getResult/', UploadImageAPI.as_view(), name='getResult'),
+    path(r"api/getResult/", GetPredictAPI.getJson, name='getResult'),
 
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

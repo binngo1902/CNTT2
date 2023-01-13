@@ -21,12 +21,14 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 class UploadImageSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = UploadImage
         fields = ('id', 'username' ,'image')
 
 
 class GetPredictSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(use_url=False)
     class Meta:
         model = UploadImage
-        fields = ('username')
+        fields = ("image","predictions")
