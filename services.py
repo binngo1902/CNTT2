@@ -26,7 +26,15 @@ model_NLP = tf.keras.models.load_model('MLP_mobileNet_InceptionV3_VGG16_2')
 
 route = "ApiSource/media"
 # Show the model architecture
-
+label = [
+  "Actinic keratoses (akiec)",
+  "Basal cell carcinoma (bcc)",
+  "Benign keratosis-like lesions (bkl)",
+  "Dermatofibroma (df)",
+  "Melanoma (mel)",
+  "Melanocytic nevi (nv)",
+  "Pyogenic granulomas and hemorrhage (vasc)"
+]
 while True:
   query = ("SELECT image FROM MyApi_uploadimage Where predictions = '' ")
   cursor.execute(query)
@@ -42,9 +50,12 @@ while True:
     x = np.concatenate((x1,x2,x3), axis=None)
     a = model_NLP.predict(expand_dims(x, 0))
     index = np.argmax(a)
-    print(index)
+    if a[index] >= 0.5:
+      predict = label[index]
+    else:
+      predict = "Unkown"
     query2 = "UPDATE MyApi_uploadimage SET predictions = %s WHERE image = %s "
-    cursor.execute(query2,(str(index),image))
+    cursor.execute(query2,(str(predict),image))
   time.sleep(1)
 cursor.close()
 cnx.close()

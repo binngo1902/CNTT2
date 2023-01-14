@@ -21,7 +21,7 @@ class ApiService {
     if (Platform.isAndroid) {
       path = "http://10.0.2.2:8000";
     } else {
-      path = "http://127.0.0.1:8000";
+      path = "http://192.168.100.8:8000";
     }
 
     registerUri = Uri.parse('$path/api/register/');

@@ -31,10 +31,17 @@ class _LoginState extends State<Login> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
+      appBar: AppBar(
+        backgroundColor: Colors.white10,
+        iconTheme: IconThemeData(
+          color: Colors.blue,
+        ),
+        elevation: 0,
+      ),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
+        constraints: BoxConstraints.expand(),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -45,7 +52,7 @@ class _LoginState extends State<Login> {
                     style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.w500,
-                        fontSize: 30),
+                        fontSize: 25),
                   )),
               SizedBox(
                 height: 50,

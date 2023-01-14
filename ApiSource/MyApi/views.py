@@ -69,7 +69,8 @@ class GetPredictAPI(APIView):
         search_text = request.GET.get('username')
         my_filter = {}
         my_filter["username"] = search_text
-        todos = UploadImage.objects.filter(**my_filter).all().values()
+        
+        todos = UploadImage.objects.filter(**my_filter).exclude(predictions__exact="").all().values()
         return Response({"data": todos,
                     },
                     status=status.HTTP_200_OK)

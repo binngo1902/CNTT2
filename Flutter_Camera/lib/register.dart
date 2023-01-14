@@ -39,10 +39,9 @@ class _RegisterState extends State<Register> {
         ),
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
+      body: Container(
+        padding: EdgeInsets.fromLTRB(25, 25, 25, 25),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -53,7 +52,7 @@ class _RegisterState extends State<Register> {
                     style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.w500,
-                        fontSize: 30),
+                        fontSize: 25),
                   )),
               SizedBox(
                 height: 50,
