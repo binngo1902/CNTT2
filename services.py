@@ -38,7 +38,8 @@ label = [
 while True:
   query = ("SELECT image FROM MyApi_uploadimage Where predictions = '' ")
   cursor.execute(query)
-  for (image,) in cursor:
+  row = cursor.fetchall()
+  for (image,) in row:
     try:
       img = load_img(f"{route}/{image}",target_size=(128,128))
     except:
@@ -50,7 +51,8 @@ while True:
     x = np.concatenate((x1,x2,x3), axis=None)
     a = model_NLP.predict(expand_dims(x, 0))
     index = np.argmax(a)
-    if a[index] >= 0.5:
+    print(a,label[index],index)
+    if a[0][index] >= 0.9:
       predict = label[index]
     else:
       predict = "Unkown"

@@ -33,62 +33,82 @@ class ApiService {
 
   Future<dynamic> register(
       String email, String username, String password) async {
-    var response = await http.post(registerUri,
-        body: {"email": email, "username": username, "password": password});
-    return response;
+    try {
+      var response = await http.post(registerUri,
+          body: {"email": email, "username": username, "password": password});
+      return response;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<dynamic> logout() async {
-    var token = await storage.read(key: 'token');
-    var response = await http.post(logoutUri, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Token $token',
-    });
+    try {
+      var token = await storage.read(key: 'token');
+      var response = await http.post(logoutUri, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Token $token',
+      });
 
-    return response;
+      return response;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<dynamic> login(String username, String password) async {
-    var response = await http
-        .post(loginUri, body: {"username": username, "password": password});
-    return response;
+    try {
+      var response = await http
+          .post(loginUri, body: {"username": username, "password": password});
+      return response;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Future<dynamic> getResult() async {
-    var token = await storage.read(key: 'token');
-    var username = await storage.read(key: 'username');
-    var Query =
-        Uri.parse(getResultUri.toString() + '?username=' + (username ?? ""));
-    var response = await http.get(Query, headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Token $token',
-    });
-    return response;
+    try {
+      var token = await storage.read(key: 'token');
+      var username = await storage.read(key: 'username');
+      var Query =
+          Uri.parse(getResultUri.toString() + '?username=' + (username ?? ""));
+      var response = await http.get(Query, headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Token $token',
+      });
+      return response;
+    } catch (e) {
+      return 0;
+    }
   }
 
   Upload(File img) async {
-    var token = await storage.read(key: 'token');
-    var username = await storage.read(key: 'username');
-    var request = new http.MultipartRequest("POST", uploadUri);
-    Map<String, String> headers = {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': 'Token $token',
-    };
-    request.headers.addAll(headers);
-    request.fields['username'] = username ?? "";
+    try {
+      var token = await storage.read(key: 'token');
+      var username = await storage.read(key: 'username');
+      var request = new http.MultipartRequest("POST", uploadUri);
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Token $token',
+      };
+      request.headers.addAll(headers);
+      request.fields['username'] = username ?? "";
 
-    request.files.add(await http.MultipartFile.fromBytes(
-      "image",
-      img.readAsBytesSync(),
-      filename: (DateTime.now().millisecondsSinceEpoch.toString()) +
-          Random().nextInt(10000).toString() +
-          ".jpg",
-    ));
-    var response = await request.send();
-    final respStr = await response.stream.bytesToString();
-    return response;
+      request.files.add(await http.MultipartFile.fromBytes(
+        "image",
+        img.readAsBytesSync(),
+        filename: (DateTime.now().millisecondsSinceEpoch.toString()) +
+            Random().nextInt(10000).toString() +
+            ".jpg",
+      ));
+      var response = await request.send();
+      final respStr = await response.stream.bytesToString();
+      return response;
+    } catch (e) {
+      return 0;
+    }
   }
 }

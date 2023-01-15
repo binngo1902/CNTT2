@@ -173,15 +173,23 @@ class _InformationState extends State<Information> {
   }
 
   _logout() async {
-    ApiService api = new ApiService();
-    LoadingDialog.showLoadingDialog(context, "Logout...");
-    var response = await api.logout();
-    if (response.statusCode == 204) {
-      await storage.delete(key: 'token');
+    try {
+      ApiService api = new ApiService();
+      LoadingDialog.showLoadingDialog(context, "Logout...");
+      var response = await api.logout();
       LoadingDialog.hideLoadingDialog(context);
-      Navigator.pushReplacementNamed(context, '/login');
-    } else {
-      LoadingDialog.hideLoadingDialog(context);
+
+      if (response.statusCode == 204) {
+        await storage.delete(key: 'token');
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        MessageDialog.showMessageDialog(
+          context,
+          "Error",
+          "System Error. Please try again",
+        );
+      }
+    } catch (e) {
       MessageDialog.showMessageDialog(
         context,
         "Error",

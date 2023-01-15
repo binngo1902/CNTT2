@@ -26,6 +26,9 @@ class _LoginState extends State<Login> {
   bool usernameInvalid = false;
   bool passwordInvalid = false;
 
+  @override
+  void initState() {}
+
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -194,32 +197,40 @@ class _LoginState extends State<Login> {
 
     setState(() {});
     if (!passwordInvalid && !usernameInvalid) {
-      ApiService api = new ApiService();
-      LoadingDialog.showLoadingDialog(context, "Loading...");
+      try {
+        ApiService api = new ApiService();
+        LoadingDialog.showLoadingDialog(context, "Loading...");
 
-      var response =
-          await api.login(usernameController.text, passwordController.text);
-      LoadingDialog.hideLoadingDialog(context);
-      if (response.statusCode == 200) {
-        var message = jsonDecode(response.body);
-        var token = message["token"];
-        var username = message["user"]["username"];
-        await storage.write(key: 'token', value: token);
-        await storage.write(key: 'username', value: username);
-        Navigator.pushReplacementNamed(context, '/home');
-      } else if (response.statusCode == 400) {
-        var errorText = jsonDecode(response.body);
+        var response =
+            await api.login(usernameController.text, passwordController.text);
+        LoadingDialog.hideLoadingDialog(context);
+        if (response.statusCode == 200) {
+          var message = jsonDecode(response.body);
+          var token = message["token"];
+          var username = message["user"]["username"];
+          await storage.write(key: 'token', value: token);
+          await storage.write(key: 'username', value: username);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else if (response.statusCode == 400) {
+          var errorText = jsonDecode(response.body);
 
-        String error = "";
-        if (errorText.containsKey('non_field_errors')) {
-          error = errorText['non_field_errors'][0];
+          String error = "";
+          if (errorText.containsKey('non_field_errors')) {
+            error = errorText['non_field_errors'][0];
+          }
+          MessageDialog.showMessageDialog(
+            context,
+            "Error",
+            error,
+          );
+        } else {
+          MessageDialog.showMessageDialog(
+            context,
+            "Error",
+            "System Error. Please try again",
+          );
         }
-        MessageDialog.showMessageDialog(
-          context,
-          "Error",
-          error,
-        );
-      } else {
+      } catch (e) {
         MessageDialog.showMessageDialog(
           context,
           "Error",

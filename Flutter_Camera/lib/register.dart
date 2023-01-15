@@ -206,33 +206,41 @@ class _RegisterState extends State<Register> {
         : EmailInvalid = false;
     setState(() {});
     if (!passwordInvalid && !usernameInvalid && !EmailInvalid) {
-      ApiService api = new ApiService();
-      LoadingDialog.showLoadingDialog(context, "Loading...");
-      var response = await api.register(emailController.text,
-          usernameController.text, passwordController.text);
-      LoadingDialog.hideLoadingDialog(context);
-      if (response.statusCode == 200) {
-        var message = jsonDecode(response.body);
-        var token = message["token"];
-        var username = message["user"]["username"];
-        await storage.write(key: 'token', value: token);
-        await storage.write(key: 'username', value: username);
-        Navigator.pushReplacementNamed(context, '/home');
-      } else if (response.statusCode == 400) {
-        var errorText = jsonDecode(response.body);
+      try {
+        ApiService api = new ApiService();
+        LoadingDialog.showLoadingDialog(context, "Loading...");
+        var response = await api.register(emailController.text,
+            usernameController.text, passwordController.text);
+        LoadingDialog.hideLoadingDialog(context);
+        if (response.statusCode == 200) {
+          var message = jsonDecode(response.body);
+          var token = message["token"];
+          var username = message["user"]["username"];
+          await storage.write(key: 'token', value: token);
+          await storage.write(key: 'username', value: username);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else if (response.statusCode == 400) {
+          var errorText = jsonDecode(response.body);
 
-        String error = "";
-        if (errorText.containsKey('email')) {
-          error = errorText['email'][0];
-        } else if (errorText.containsKey('username')) {
-          error = errorText['username'][0];
+          String error = "";
+          if (errorText.containsKey('email')) {
+            error = errorText['email'][0];
+          } else if (errorText.containsKey('username')) {
+            error = errorText['username'][0];
+          }
+          MessageDialog.showMessageDialog(
+            context,
+            "Error",
+            error,
+          );
+        } else {
+          MessageDialog.showMessageDialog(
+            context,
+            "Error",
+            "System Error. Please try again",
+          );
         }
-        MessageDialog.showMessageDialog(
-          context,
-          "Error",
-          error,
-        );
-      } else {
+      } catch (e) {
         MessageDialog.showMessageDialog(
           context,
           "Error",
