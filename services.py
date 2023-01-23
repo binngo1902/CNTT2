@@ -52,7 +52,7 @@ while True:
     a = model_NLP.predict(expand_dims(x, 0))
     index = np.argmax(a)
     print(a,label[index],index)
-    if a[0][index] >= 0.9:
+    if a[0][index] >= 0.6:
       predict = label[index]
     else:
       predict = "Unkown"
