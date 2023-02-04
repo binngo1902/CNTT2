@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -137,9 +138,14 @@ class _InformationState extends State<Information> {
                         height: 5,
                       ),
                       Text(
-                        snapshot.data[index]['predictions'],
+                        snapshot.data[index]['predictions'] +
+                            '\n' +
+                            DateFormat("yyyy-MM-dd HH:mm")
+                                .format(DateTime.parse(
+                                    snapshot.data[index]['created_at']))
+                                .toString(),
                         style: TextStyle(
-                          fontSize: 25,
+                          fontSize: 20,
                           color: Colors.black87,
                         ),
                       )

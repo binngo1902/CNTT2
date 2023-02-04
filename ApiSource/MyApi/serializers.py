@@ -31,4 +31,4 @@ class GetPredictSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=False)
     class Meta:
         model = UploadImage
-        fields = ("image","predictions")
+        fields = ("image","predictions","created_at")

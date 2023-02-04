@@ -18,6 +18,7 @@ class Migration(migrations.Migration):
                 ('username', models.CharField(max_length=255)),
                 ('image', models.ImageField(upload_to='images')),
                 ('predictions', models.CharField(max_length=255)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]
